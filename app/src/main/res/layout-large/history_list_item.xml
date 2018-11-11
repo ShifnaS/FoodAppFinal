@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@color/white"
+    android:layout_marginTop="20dp"
+    >
+
+    <LinearLayout
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal"
+        android:padding="5dp">
+
+        <TextView
+            android:textColor="@color/black"
+            android:id="@+id/order_completed"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:text="order completed"
+            android:textAllCaps="true"
+            android:layout_weight="1"/>
+        <TextView
+            android:id="@+id/total_text"
+            android:layout_width="0dp"
+            android:textColor="@color/black"
+
+            android:gravity="end"
+            android:layout_height="match_parent"
+            android:text="Total"
+            android:textAllCaps="true"
+            android:layout_weight=".8"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal"
+        android:padding="5dp">
+
+        <TextView
+            android:id="@+id/date"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:textColor="@color/black"
+
+            android:text="17 Aug 2018,3:20PM"
+            android:textAllCaps="true"
+            android:layout_weight="1"/>
+        <TextView
+            android:gravity="end"
+            android:id="@+id/total"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:text="100"
+            android:textColor="@color/red"
+            android:textAllCaps="true"
+            android:layout_weight=".8"/>
+    </LinearLayout>
+    <TextView
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:padding="5dp"
+        android:id="@+id/order_id"
+        android:layout_width="match_parent"
+        android:textColor="@color/black"
+
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:text="Order #145"/>
+
+
+</LinearLayout>

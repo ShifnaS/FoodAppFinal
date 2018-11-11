@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/navigation_food"
+        android:enabled="true"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/ic_tab_food"
+        android:title="@string/title_food" />
+
+
+
+    <item
+        android:id="@+id/navigation_beverage"
+        android:enabled="true"
+        android:icon="@drawable/ic_tab_beverage"
+        android:title="@string/title_beverage" />
+    <item
+        android:enabled="true"
+        app:showAsAction="ifRoom"
+        android:id="@+id/navigation_cart"
+        android:icon="@drawable/ic_tab_cart"
+        android:title="@string/title_cart" />
+    <item
+        android:enabled="true"
+        app:showAsAction="ifRoom"
+        android:id="@+id/navigation_history"
+        android:icon="@drawable/ic_tab_history"
+        android:title="@string/title_history" />
+
+</menu>

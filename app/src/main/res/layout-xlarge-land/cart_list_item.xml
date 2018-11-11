@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@color/white"
+    >
+
+    <LinearLayout
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:gravity="center_vertical|center_horizontal"
+        android:layout_weight=".8"
+        android:orientation="horizontal"
+        android:padding="5dp">
+
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Chickrn Chilly"
+            android:textColor="@color/black"
+            android:textAllCaps="true"
+            android:layout_weight="1"/>
+        <TextView
+            android:textColor="@color/red"
+
+            android:id="@+id/price"
+            android:layout_width="0dp"
+            android:gravity="end"
+            android:layout_height="wrap_content"
+            android:text="24"
+            android:textAllCaps="true"
+            android:layout_weight=".8"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1.2"
+        android:orientation="horizontal"
+        android:gravity="center_horizontal|center_vertical"
+
+        android:padding="1dp">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_weight="1.2"
+            android:layout_height="wrap_content">
+            <Button
+                android:id="@+id/delete"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:textColor="@color/white"
+                android:text="delete"
+                android:textAllCaps="true"
+                android:background="@drawable/buttonbackred"/>
+        </LinearLayout>
+        <com.hariofspades.incdeclibrary.IncDecImageButton
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            app:textSizeB="16"
+            android:id="@+id/incdec"
+            app:textColorB="@color/colorPrimaryDark"
+            app:leftButtonColorTintB="@color/colorPrimaryDark"
+            app:rightButtonColorTinitB="@color/colorPrimary"
+            app:leftDrawableTintB="@color/colorPrimaryDark"
+            app:rightDrawableTintB="@color/colorPrimaryDark"
+            app:leftDrawableB="@drawable/ic_remove_black_24dp"
+            app:rightDrawableB="@drawable/ic_add_black_24dp"/>
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_weight="1.5"
+            android:layout_height="wrap_content">
+
+        </LinearLayout>
+    </LinearLayout>
+
+
+
+</LinearLayout>

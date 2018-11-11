@@ -1,0 +1,32 @@
+<resources>
+    <string name="app_name">Food App</string>
+    <string name="singup">SINGUP</string>
+    <string name="login">LOGIN</string>
+    <string name="error_connection">Check your connection and try again.</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="title_food">FOOD</string>
+    <string name="title_beverage">BEVERAGE</string>
+    <string name="title_cart">CART</string>
+    <string name="title_history">HISTORY</string>
+    <string name="change_password">Change Password</string>
+    <string name="logout">Logout</string>
+    <string name="email_error">Please enter your email</string>
+    <string name="password_error">Please enter a password</string>
+    <string name="phone_error">Please enter a phone no</string>
+    <string name="password_length_error">password length must be greater than 7</string>
+    <string name="phone_valid_error">Enter a valid 10 digit mobile no</string>
+    <string name="email_valid_error">Enter a valid email id</string>
+    <string name="password_same_error">new password must differ from old</string>
+    <string name="your_cart">Your Cart</string>
+    <string name="your_order_details">Your Order Details</string>
+    <string name="gst">GST</string>
+    <string name="item_total">Item Total</string>
+    <string name="to_pay">To Pay</string>
+    <string name="scan_bar_code">Scan a Qr Code</string>
+    <string name="message_received">Message Received:</string>
+    <string name="message_main_activity">Message received in MainActivity :</string>
+
+</resources>
