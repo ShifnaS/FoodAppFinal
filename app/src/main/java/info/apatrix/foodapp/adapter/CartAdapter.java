@@ -91,7 +91,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
                 double unit_price = price * quantity;
                 holder.price.setText("$" + unit_price);
                 cartListner.order(id, quantity);
-
+                cartListner.cartList(0.0);
                /* int pricee=Integer.parseInt(holder.price.getText().toString());
                 sum=sum+pricee;
                 cartListner.cartList(total);

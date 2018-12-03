@@ -3,17 +3,13 @@ package info.apatrix.foodapp.fragments;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.PointF;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.internal.BottomNavigationItemView;
-import android.support.design.internal.BottomNavigationMenuView;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
@@ -28,14 +24,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import com.google.zxing.Result;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
@@ -48,18 +42,14 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import info.apatrix.foodapp.Activity.HomeMenuActivity;
 import info.apatrix.foodapp.Activity.OrderSuccessActivity;
-import info.apatrix.foodapp.Activity.ResetSuccessActivity;
 import info.apatrix.foodapp.Helper.SQLiteOperations;
 import info.apatrix.foodapp.R;
 import info.apatrix.foodapp.adapter.CartAdapter;
 import info.apatrix.foodapp.adapter.RecyclerTouchListener;
 import info.apatrix.foodapp.api.APIService;
 import info.apatrix.foodapp.api.ApiModule;
-import info.apatrix.foodapp.model.Customer;
-import info.apatrix.foodapp.model.Order;
 import info.apatrix.foodapp.model.Products;
 import info.apatrix.foodapp.model.ResultCustomer;
-import info.apatrix.foodapp.model.ResultCustomerData;
 import info.apatrix.foodapp.utils.SharedPreferenceUtils;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -182,12 +172,26 @@ public class CartFragment extends Fragment  {
         cartListner=new CartListner() {
             @Override
             public void cartList(Double total) {
-                double gst=total*(0.18);
-                double sum=gst+total;
-                item_total.setText("$" +total);
-                item_gst.setText("$" +String.format("%.2f", gst));
-                to_pay.setText("$" +String.format("%.2f", total));
+
+                if(total==0.0)
+                {
+                    double tot=getTotal();
+                    item_total.setText("$" +tot);
+                    to_pay.setText("$" +String.format("%.2f", tot));
+                }
+
+                else
+                {
+                    double gst=total*(0.18);
+                    double sum=gst+total;
+                    item_total.setText("$" +total);
+                    item_gst.setText("$" +String.format("%.2f", gst));
+                    to_pay.setText("$" +String.format("%.2f", total));
+                }
+
             }
+
+
 
             @Override
             public void order(int product_id, int quantity) {
@@ -264,21 +268,26 @@ public class CartFragment extends Fragment  {
         mAdapter = new CartAdapter(getContext(), productsList,cartListner);
         recyclerView.setAdapter(mAdapter);
 
-        recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getContext(), recyclerView, new RecyclerTouchListener.ClickListener() {
-            @Override
-            public void onClick(View view, int position) {
-                double total=0.0;
-                //  String title = ((TextView) view.findViewById(R.id.title)).getText().toString();
-                String price = ((TextView) recyclerView.findViewHolderForAdapterPosition(position).itemView.findViewById(R.id.price)).getText().toString();
-                total=total+Double.parseDouble(price);
-                Toast.makeText(getContext(), ""+total, Toast.LENGTH_SHORT).show();
-            }
 
-            @Override
-            public void onLongClick(View view, int position) { }
-        }));
 
         return root;
+    }
+
+    private double getTotal()
+    {
+        double total=0.0;
+        for(int i=0;i<productsList.size();i++)
+        {
+            View row = recyclerView.getLayoutManager().findViewByPosition(i);
+            TextView tv_price = row.findViewById(R.id.price);
+            String priceString=tv_price.getText().toString();
+            String prices=priceString.substring(1);
+            //Toast.makeText(getContext(), "prices "+prices, Toast.LENGTH_SHORT).show();
+            double price=Double.parseDouble(prices);
+            total=total+price;
+        }
+
+        return total;
     }
 
 
