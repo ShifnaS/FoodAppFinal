@@ -31,8 +31,8 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
     double total=0;
     CartFragment.CartListner cartListner;
     String q="";
-     int quantity=0;
-
+    int quantity=0;
+    private double unit_total=0;
 
     public CartAdapter(Context context, List<Products> productList, CartFragment.CartListner cartListner) {
         this.context = context;
@@ -51,30 +51,31 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
     public void onBindViewHolder(final CartAdapter.MyViewHolder holder, int position)
 
     {
-        String base_url="http://actors-music.akstech.com.sg/";
+
+        String base_url = "http://actors-music.akstech.com.sg/";
         final Products item = productList.get(position);
         holder.name.setText(item.getProname());
-        holder.price.setText("₹" + item.getCost());
-        holder.incdec.setConfiguration(LinearLayout.HORIZONTAL,IncDecImageButton.TYPE_INTEGER,
-                IncDecImageButton.DECREMENT,IncDecImageButton.INCREMENT);
-        holder.incdec.setupValues(1,20,1,1);
-        holder.incdec.enableLongPress(false,false,500);
+        int item_quantity = item.getItem_quantity();
+        final double price = item.getSales();
+        unit_total = item_quantity * price;
+        holder.price.setText("$" + unit_total);
+        holder.incdec.setConfiguration(LinearLayout.HORIZONTAL, IncDecImageButton.TYPE_INTEGER,
+                IncDecImageButton.DECREMENT, IncDecImageButton.INCREMENT);
+        holder.incdec.setupValues(1, 20, 1, 1);
+        holder.incdec.enableLongPress(false, false, 500);
 
-        total=total+item.getCost();
-        final int id=item.getProduct_id();
+        final int id = item.getProduct_id();
 
         holder.incdec.setIntNumber(item.getItem_quantity());
 
-        cartListner.cartList(total);
-        cartListner.order(id,item.getItem_quantity());
+        cartListner.order(id, item.getItem_quantity());
 
 
         holder.bt_delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                cartListner.onItemClick(v, holder.getPosition(),id);
-
+                cartListner.onItemClick(v, holder.getPosition(), id);
 
 
             }
@@ -83,14 +84,27 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
         holder.incdec.setOnClickListener(new IncDecImageButton.OnClickListener() {
             @Override
             public void onClick(View view) {
-                q=holder.incdec.getValue();
-                quantity= Integer.parseInt(q);
-               // Toast.makeText(context, ""+quantity, Toast.LENGTH_SHORT).show();
-                cartListner.order(id,quantity);
+                //  total=0;
+                int sum=0;
+                q = holder.incdec.getValue();
+                quantity = Integer.parseInt(q);
+                double unit_price = price * quantity;
+                holder.price.setText("$" + unit_price);
+                cartListner.order(id, quantity);
+
+               /* int pricee=Integer.parseInt(holder.price.getText().toString());
+                sum=sum+pricee;
+                cartListner.cartList(total);
+*/
+
+
 
             }
         });
-    }
+        total=total+unit_total;
+        cartListner.cartList(total);
+
+}
 
     @Override
     public int getItemCount() {
@@ -113,7 +127,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
             name.setTypeface(medium);
             price.setTypeface(medium);
             bt_delete.setTypeface(medium);
-           // incdec.setTypeface(medium);
+            // incdec.setTypeface(medium);
 
         }
     }

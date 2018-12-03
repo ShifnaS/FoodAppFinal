@@ -4,6 +4,7 @@ package info.apatrix.foodapp.fragments;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.PointF;
@@ -27,6 +28,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -50,11 +52,13 @@ import info.apatrix.foodapp.Activity.ResetSuccessActivity;
 import info.apatrix.foodapp.Helper.SQLiteOperations;
 import info.apatrix.foodapp.R;
 import info.apatrix.foodapp.adapter.CartAdapter;
+import info.apatrix.foodapp.adapter.RecyclerTouchListener;
 import info.apatrix.foodapp.api.APIService;
 import info.apatrix.foodapp.api.ApiModule;
 import info.apatrix.foodapp.model.Customer;
 import info.apatrix.foodapp.model.Order;
 import info.apatrix.foodapp.model.Products;
+import info.apatrix.foodapp.model.ResultCustomer;
 import info.apatrix.foodapp.model.ResultCustomerData;
 import info.apatrix.foodapp.utils.SharedPreferenceUtils;
 import retrofit2.Call;
@@ -109,6 +113,7 @@ public class CartFragment extends Fragment  {
     JsonArray ja;
     private IntentIntegrator qrScan;
 
+    ProgressDialog progress;
 
     HomeMenuActivity.BadgeUpdate badgeUpdate;
     private ViewGroup mainLayout;
@@ -153,6 +158,7 @@ public class CartFragment extends Fragment  {
         recyclerView.setHorizontalScrollBarEnabled(false);
         root.setVerticalScrollBarEnabled(false);
         root.setHorizontalScrollBarEnabled(false);
+        progress = new ProgressDialog(getContext());
 
         item_your_cart.setTypeface(bold);
         item_order_details.setTypeface(regular);
@@ -178,9 +184,9 @@ public class CartFragment extends Fragment  {
             public void cartList(Double total) {
                 double gst=total*(0.18);
                 double sum=gst+total;
-                item_total.setText("₹" +total);
-                item_gst.setText("₹" +String.format("%.2f", gst));
-                to_pay.setText("₹" +String.format("%.2f", sum));
+                item_total.setText("$" +total);
+                item_gst.setText("$" +String.format("%.2f", gst));
+                to_pay.setText("$" +String.format("%.2f", total));
             }
 
             @Override
@@ -258,7 +264,19 @@ public class CartFragment extends Fragment  {
         mAdapter = new CartAdapter(getContext(), productsList,cartListner);
         recyclerView.setAdapter(mAdapter);
 
+        recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getContext(), recyclerView, new RecyclerTouchListener.ClickListener() {
+            @Override
+            public void onClick(View view, int position) {
+                double total=0.0;
+                //  String title = ((TextView) view.findViewById(R.id.title)).getText().toString();
+                String price = ((TextView) recyclerView.findViewHolderForAdapterPosition(position).itemView.findViewById(R.id.price)).getText().toString();
+                total=total+Double.parseDouble(price);
+                Toast.makeText(getContext(), ""+total, Toast.LENGTH_SHORT).show();
+            }
 
+            @Override
+            public void onLongClick(View view, int position) { }
+        }));
 
         return root;
     }
@@ -322,23 +340,32 @@ public class CartFragment extends Fragment  {
     private void orderNow(JsonObject jo) {
 
         APIService service = ApiModule.getAPIService();
-        Call<ResultCustomerData> call = service.order(jo);
+        Call<ResultCustomer> call = service.order(jo);
 
 
-        call.enqueue(new Callback<ResultCustomerData>() {
+        call.enqueue(new Callback<ResultCustomer>() {
             @Override
-            public void onResponse(Call<ResultCustomerData> call, Response<ResultCustomerData> response) {
+            public void onResponse(Call<ResultCustomer> call, Response<ResultCustomer> response) {
+                progress.dismiss();
                 try
                 {
-                  //  Toast.makeText(getContext(), "status "+response.body().isStatus(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "status "+response.body().isStatus(), Toast.LENGTH_SHORT).show();
                     if(response.body().isStatus())
                     {
                         // JSONObject jo =response.body().getResponse();
-                        //Toast.makeText(getContext(), response.body().getMessage(), Toast.LENGTH_SHORT).show();
-                        sqLiteOperations.deleteallData();
-                        Intent i=new Intent(getContext(),OrderSuccessActivity.class);
-                        startActivity(i);
-                        getActivity().finish();
+                        if(response.body().getMessage().equalsIgnoreCase("success"))
+                        {
+                            Toast.makeText(getContext(), response.body().getResponse(), Toast.LENGTH_SHORT).show();
+                            sqLiteOperations.deleteallData();
+                            Intent i=new Intent(getContext(),OrderSuccessActivity.class);
+                            startActivity(i);
+                            getActivity().finish();
+                        }
+                        else
+                        {
+                            Toast.makeText(getContext(), "Failed", Toast.LENGTH_SHORT).show();
+                        }
+
 
 
                     }
@@ -361,7 +388,9 @@ public class CartFragment extends Fragment  {
             }
 
             @Override
-            public void onFailure(Call<ResultCustomerData> call, Throwable t) {
+            public void onFailure(Call<ResultCustomer> call, Throwable t) {
+             //   Log.e("response");
+                progress.dismiss();
                 Log.e("MyTag", "requestFailed", t);
                 Log.e("Failure ",t.getMessage());
 
@@ -388,11 +417,14 @@ public class CartFragment extends Fragment  {
                     JsonObject jo=new JsonObject();
                     try
                     {
-                       // Toast.makeText(getContext(), " size ja "+ja.toString(), Toast.LENGTH_SHORT).show();
+                     //   Toast.makeText(getContext(), " size ja "+table_id+"Uesr ID"+user_id, Toast.LENGTH_SHORT).show();
                         jo.addProperty("customer_id",user_id);
                         jo.addProperty("tab_id",table_id);
                         jo.add("cart",ja);
-
+                      //  progress.setTitle("Loading");
+                        progress.setMessage("Wait while loading...");
+                        progress.setCancelable(false); // disable dismiss by tapping outside of the dialog
+                        progress.show();
                         orderNow(jo);
                         Log.e("Cart Dtata","//////////////////////////////////// "+jo.toString());
 
@@ -424,6 +456,7 @@ public class CartFragment extends Fragment  {
         void onItemClick(View v, int position,int id);
 
     }
+
 
 
 

@@ -6,6 +6,7 @@ import org.json.JSONObject;
 
 import info.apatrix.foodapp.model.Order;
 import info.apatrix.foodapp.model.Result;
+import info.apatrix.foodapp.model.ResultCustomer;
 import info.apatrix.foodapp.model.ResultHistoryList;
 import info.apatrix.foodapp.model.ResultProductList;
 import info.apatrix.foodapp.model.ResultCustomerData;
@@ -25,8 +26,9 @@ public interface APIService {
     Call<ResultCustomerData> register(
             @Field("email") String email,
             @Field("phone") String phone,
-            @Field("password") String password
-
+            @Field("password") String password,
+            @Field("name") String name,
+            @Field("dob") String dob
     );
     @FormUrlEncoded
     @POST("customers/login")
@@ -58,7 +60,7 @@ public interface APIService {
             "Content-Type: application/json;charset=UTF-8"
     })
     @POST("order/order_insert")
-    Call<ResultCustomerData> order(@Body JsonObject jsonObject);
+    Call<ResultCustomer> order(@Body JsonObject jsonObject);
 
     @FormUrlEncoded
     @POST("order/order")

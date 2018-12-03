@@ -1,5 +1,6 @@
 package info.apatrix.foodapp.Activity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.support.v7.app.AppCompatActivity;
@@ -11,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,6 +25,7 @@ import info.apatrix.foodapp.api.ApiModule;
 import info.apatrix.foodapp.model.Customer;
 import info.apatrix.foodapp.model.ResultCustomerData;
 import info.apatrix.foodapp.utils.NetworkUtil;
+import info.apatrix.foodapp.utils.SharedPreferenceUtils;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -33,28 +36,43 @@ public class SignupActivity extends AppCompatActivity {
 
     @BindView(R.id.enter_details)
     TextView tv_enter_details;
+
     @BindView(R.id.create_account)
     TextView tv_create_account;
+
     @BindView(R.id.have_account)
     TextView tv_have_account;
+
     @BindView(R.id.link_login)
     TextView tv_link_login;
-    @BindView(R.id.input_email)
 
+    @BindView(R.id.input_name)
+    EditText et_input_name;
+
+    @BindView(R.id.input_dob)
+    EditText et_input_dob;
+
+    @BindView(R.id.input_email)
     EditText et_input_email;
+
     @BindView(R.id.input_phone)
     EditText et_input_phone;
+
     @BindView(R.id.input_password)
     EditText et_input_password;
+
     @BindView(R.id.toolbar)
     Toolbar toolbar;
+    ProgressDialog progress;
+   /* @BindView(R.id.progressBar)
+    ProgressBar progressBar;*/
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_signup);
         ButterKnife.bind(this);
-
+//        progressBar=new ProgressBar(getApplicationContext());
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -72,6 +90,10 @@ public class SignupActivity extends AppCompatActivity {
         et_input_email.setTypeface(regular);
         et_input_phone.setTypeface(regular);
         et_input_password.setTypeface(regular);
+        et_input_name.setTypeface(regular);
+        et_input_dob.setTypeface(regular);
+
+        progress = new ProgressDialog(this);
 
 
     }
@@ -83,8 +105,18 @@ public class SignupActivity extends AppCompatActivity {
     }
     @OnClick(R.id.btn_signup)
     public void onButtonClick(View view) {
+        if(isNameEmpty())
+        {
+            et_input_name.setError(getString(R.string.email_name));
 
-        if (isEmailEmpty()){
+        }
+        else if(isDobEmpty())
+        {
+            et_input_dob.setError(getString(R.string.email_dob));
+
+        }
+
+        else if (isEmailEmpty()){
             et_input_email.setError(getString(R.string.email_error));
         }
         else  if (!isValidEmail()){
@@ -112,10 +144,20 @@ public class SignupActivity extends AppCompatActivity {
             String email=et_input_email.getText().toString().trim();
             String phone=et_input_phone.getText().toString().trim();
             String password=et_input_password.getText().toString().trim();
+            String name=et_input_name.getText().toString().trim();
+            String dob=et_input_dob.getText().toString().trim();
 
             if(NetworkUtil.isOnline())
             {
-                signUpActivity(email,phone,password);
+//                progressBar.setVisibility(View.VISIBLE);
+               //progress.
+                //progress.setTitle("Loading");
+                progress.setMessage("Wait while loading...");
+                progress.setCancelable(false); // disable dismiss by tapping outside of the dialog
+                progress.show();
+// To dismiss the dialog
+
+                signUpActivity(email,phone,password,name,dob);
             }
             else
             {
@@ -133,24 +175,31 @@ public class SignupActivity extends AppCompatActivity {
         finish();
     }
 
-    private void signUpActivity(String email, String phone, String password)
+    private void signUpActivity(String email, String phone, String password,String name,String dob)
     {
 
         APIService service = ApiModule.getAPIService();
-        Call<ResultCustomerData> call = service.register(email,phone,password);
+        Call<ResultCustomerData> call = service.register(email,phone,password,name,dob);
         call.enqueue(new Callback<ResultCustomerData>() {
             @Override
             public void onResponse(Call<ResultCustomerData> call, Response<ResultCustomerData> response) {
+//                progressBar.setVisibility(View.GONE);
+                progress.dismiss();
+
+
                 try
                 {
-                   // Toast.makeText(getApplicationContext(), "success "+response.body().getMessage(), Toast.LENGTH_SHORT).show();
 
                     if(response.body().getMessage().equalsIgnoreCase("success"))
                     {
 
-                            Intent i=new Intent(getApplicationContext(),ExploreActivity.class);
-                            startActivity(i);
-                            finish();
+                        Customer obj=response.body().getResponse();
+                        int userid=Integer.parseInt(obj.getUserid());
+                        Toast.makeText(getApplicationContext(),obj.getUserid(), Toast.LENGTH_SHORT).show();
+                        SharedPreferenceUtils.getInstance(getApplicationContext()).setValue("userid",userid);
+                        Intent i=new Intent(getApplicationContext(),ExploreActivity.class);
+                        startActivity(i);
+                        finish();
 
                     }
                     else
@@ -174,11 +223,20 @@ public class SignupActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<ResultCustomerData> call, Throwable t) {
+//                progressBar.setVisibility(View.GONE);
+                progress.dismiss();
+
                 Log.e("MyTag", "requestFailed", t);
                 Log.e("Failure ",t.getMessage());
 
             }
         });
+    }
+    public boolean isNameEmpty() {
+        return (et_input_name.getText().toString().isEmpty());
+    }
+    public boolean isDobEmpty() {
+        return (et_input_dob.getText().toString().isEmpty());
     }
     public boolean isPasswordEmpty() {
         return et_input_password.getText().toString().isEmpty();
@@ -197,7 +255,7 @@ public class SignupActivity extends AppCompatActivity {
     public boolean isPhoneValid() {
         boolean res=false;
         String phone=et_input_phone.getText().toString().trim();
-        if(phone.length()!=10)
+        if(phone.length()!=8)
         {
             res=true;
         }

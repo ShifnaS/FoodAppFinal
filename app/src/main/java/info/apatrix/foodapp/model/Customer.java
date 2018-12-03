@@ -11,6 +11,7 @@ public class Customer {
     private String email;
     private String error;
 
+
     public String getError() {
         return error;
     }

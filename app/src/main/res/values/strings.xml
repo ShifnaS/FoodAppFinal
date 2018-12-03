@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Food App</string>
+    <string name="app_name">Actors Musical</string>
     <string name="singup">SINGUP</string>
     <string name="login">LOGIN</string>
     <string name="error_connection">Check your connection and try again.</string>
@@ -28,5 +28,7 @@
     <string name="scan_bar_code">Scan a Qr Code</string>
     <string name="message_received">Message Received:</string>
     <string name="message_main_activity">Message received in MainActivity :</string>
+    <string name="email_name">please enter your name</string>
+    <string name="email_dob">please enter your Dob</string>
 
 </resources>

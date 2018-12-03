@@ -154,7 +154,7 @@ public class SQLiteOperations {
                     Log.e("title","********* "+name);
                     products.setProname(name);
                     products.setProduct_id(id);
-                    products.setCost(price);
+                    products.setSales(price);
                     products.setItem_quantity(quantity);
                     productList.add(products) ;
                 } while (cursor.moveToNext());

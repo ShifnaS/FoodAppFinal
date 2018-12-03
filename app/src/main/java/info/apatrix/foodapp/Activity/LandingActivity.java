@@ -39,6 +39,7 @@ public class LandingActivity extends AppCompatActivity {
         tv_foodApp.setTypeface(bold);
         bt_login.setTypeface(semi_bold);
         bt_signUp.setTypeface(semi_bold);
+        tv_foodApp.setText("ACTORS MUSICAL");
 
     }
     @OnClick(R.id.signup)

@@ -38,6 +38,17 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.MyViewHo
         History history = historyList.get(position);
         String total=history.getTotal();
         String gst=history.getGst();
+        String status=history.getOrder_status();
+        int order_status=Integer.parseInt(status);
+        if(order_status==1)
+        {
+           holder.tv_order_completed.setText("PENDING ORDER");
+        }
+        else
+        {
+            holder.tv_order_completed.setText("ORDER COMPLETED");
+
+        }
         int grandTotal=Integer.parseInt(total)+Integer.parseInt(gst);
         String order_date=history.getDatetime();
 
@@ -54,7 +65,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.MyViewHo
         System.out.println(order_date);
         holder.tv_date.setText(order_date);
         holder.tv_orderId.setText("Order # "+history.getOrder_id());
-        holder.tv_price.setText("₹"+grandTotal);
+        holder.tv_price.setText("$"+grandTotal);
     }
 
     @Override

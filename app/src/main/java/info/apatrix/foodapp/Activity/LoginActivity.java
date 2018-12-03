@@ -1,7 +1,9 @@
 package info.apatrix.foodapp.Activity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.os.Handler;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -11,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,6 +35,7 @@ public class LoginActivity extends AppCompatActivity {
 
     @BindView(R.id.btn_signin)
     ImageButton bt_signIn;
+    ProgressDialog progress;
 
     @BindView(R.id.sign_continue)
     TextView tv_sign_continue;
@@ -49,12 +53,19 @@ public class LoginActivity extends AppCompatActivity {
     TextView tv_forget_password;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
+   /* @BindView(R.id.progressBar)
+    ProgressBar progressBar;
+*/
+    Handler handler ;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
+        handler = new Handler();
+       // progressBar=new ProgressBar(getApplicationContext());
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -72,6 +83,8 @@ public class LoginActivity extends AppCompatActivity {
         et_input_email.setTypeface(regular);
         et_input_password.setTypeface(regular);
         tv_forget_password.setTypeface(medium);
+        progress = new ProgressDialog(this);
+
     }
     @OnClick(R.id.forget_password)
     public void onButtonClick(View view) {
@@ -103,6 +116,11 @@ public class LoginActivity extends AppCompatActivity {
 
             if(NetworkUtil.isOnline())
             {
+             //   progressBar.setVisibility(View.VISIBLE);
+              //  progress.setTitle("Loading");
+                progress.setMessage("Wait while loading...");
+                progress.setCancelable(false); // disable dismiss by tapping outside of the dialog
+                progress.show();
                 signInActivity(email,password);
 
             }
@@ -111,9 +129,7 @@ public class LoginActivity extends AppCompatActivity {
                 Toast.makeText(this, "Please check your network", Toast.LENGTH_SHORT).show();
             }
 
-           /* Intent i=new Intent(getApplicationContext(),HomeMenuActivity.class);
-            startActivity(i);
-            finish();*/
+
         }
 
 
@@ -129,11 +145,15 @@ public class LoginActivity extends AppCompatActivity {
         call.enqueue(new Callback<ResultCustomerData>() {
             @Override
             public void onResponse(Call<ResultCustomerData> call, Response<ResultCustomerData> response) {
+//                progressBar.setVisibility(View.GONE);
+                progress.dismiss();
                 try
                 {
                   //  Toast.makeText(LoginActivity.this, ""+response.body().getMessage(), Toast.LENGTH_SHORT).show();
-                    if(response.body().getMessage().equals("success"))
+                    if(response.body()!=null&&response.isSuccessful())
                     {
+                        if(response.body().getMessage().equals("success"))
+                        {
                             Customer obj=response.body().getResponse();
                             String customer_id=obj.getUserid();
                             int userid=Integer.parseInt(customer_id);
@@ -143,17 +163,25 @@ public class LoginActivity extends AppCompatActivity {
                             finish();
 
 
+                        }
+                        else
+                        {
+                            Customer obj=response.body().getResponse();
+
+                            Toast.makeText(LoginActivity.this, obj.getValue(), Toast.LENGTH_SHORT).show();
+                        }
                     }
                     else
                     {
-                        Customer obj=response.body().getResponse();
+                        Toast.makeText(LoginActivity.this, "Server Busy", Toast.LENGTH_SHORT).show();
 
-                        Toast.makeText(LoginActivity.this, obj.getValue(), Toast.LENGTH_SHORT).show();
                     }
+
 
                 }
                 catch (Exception e)
                 {
+                    progress.dismiss();
                     e.printStackTrace();
                     Log.e("Exception ",e.getMessage());
 
@@ -164,6 +192,8 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<ResultCustomerData> call, Throwable t) {
+         //       progressBar.setVisibility(View.GONE);
+
                 Log.e("MyTag", "requestFailed", t);
                 Log.e("Failure ",t.getMessage());
 

@@ -33,6 +33,7 @@ public class SplashhScreenActivity extends AppCompatActivity {
         Typeface medium = Typeface.createFromAsset(getAssets(),  "fonts/Poppins-Medium.ttf");
         tv_actor.setTypeface(medium);
         tv_foodApp.setTypeface(bold);
+        tv_foodApp.setText("ACTORS MUSICAL");
 
 
         new Handler().postDelayed(new Runnable() {

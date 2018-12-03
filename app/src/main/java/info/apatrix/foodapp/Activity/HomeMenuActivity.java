@@ -84,6 +84,7 @@ public class HomeMenuActivity extends AppCompatActivity {
         Typeface regular = Typeface.createFromAsset(getAssets(), "fonts/Poppins-Regular.ttf");
         Typeface semi_bold = Typeface.createFromAsset(getAssets(), "fonts/Poppins-SemiBold.ttf");
         toolbar_title.setTypeface(semi_bold);
+        toolbar_title.setText("ACTORS MUSICAL");
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 

@@ -55,10 +55,10 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
         final Products item = productList.get(position);
         holder.name.setText(item.getProname());
         holder.description.setText(item.getProdescrip());
-        holder.price.setText("₹" + item.getCost());
+        holder.price.setText("$" + item.getSales());
         final int pid=item.getProduct_id();
         final String name=holder.name.getText().toString().trim();
-        final double price=item.getCost();
+        final double price=item.getSales();
         Glide.with(context)
                 .load(base_url+item.getPropic())
                 .into(holder.thumbnail);

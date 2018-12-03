@@ -9,7 +9,7 @@ public class Products
     int product_id;
     String proname;
     String prodescrip;
-    double cost;
+    double sales;
     String propic;
     int item_quantity;
 
@@ -48,12 +48,12 @@ public class Products
         this.prodescrip = prodescrip;
     }
 
-    public double getCost() {
-        return cost;
+    public double getSales() {
+        return sales;
     }
 
-    public void setCost(double cost) {
-        this.cost = cost;
+    public void setSales(double sales) {
+        this.sales = sales;
     }
 
     public String getPropic() {

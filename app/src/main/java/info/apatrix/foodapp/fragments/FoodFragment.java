@@ -78,7 +78,7 @@ public  class FoodFragment extends Fragment {
         if (getArguments() != null) {
             parent_d= getArguments().getString("parent_id");
         }
-        //Toast.makeText(getContext(), "ParentID  "+parent_d, Toast.LENGTH_SHORT).show();
+       // Toast.makeText(getContext(), "ParentID  "+parent_d, Toast.LENGTH_SHORT).show();
         getSubCategory(parent_d);
 
         updateBadge=new UpdateBadge() {
@@ -149,5 +149,16 @@ public  class FoodFragment extends Fragment {
         void updateCount();
     }
 
+/*    @Override
+    public void onResume() {
+        super.onResume();
+        getSubCategory(parent_d);
+    }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        getSubCategory(parent_d);
+
+    }*/
 }

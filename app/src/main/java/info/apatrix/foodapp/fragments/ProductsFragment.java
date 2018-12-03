@@ -75,7 +75,7 @@ public class ProductsFragment extends Fragment implements SwipeRefreshLayout.OnR
         // get store id
         sub_category_id = getArguments() != null ?
                 getArguments().getInt(ARG_SECTION_NUMBER) : 1;
-
+      //  Toast.makeText(getContext(), "SubCategoryID "+sub_category_id, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -109,7 +109,6 @@ public class ProductsFragment extends Fragment implements SwipeRefreshLayout.OnR
             public void run() {
 
                 mSwipeRefreshLayout.setRefreshing(true);
-
                 // Fetching data from server
                 getProductList();
             }
@@ -181,7 +180,6 @@ public class ProductsFragment extends Fragment implements SwipeRefreshLayout.OnR
                 catch (Exception e)
                 {
                     mSwipeRefreshLayout.setRefreshing(false);
-
                     e.printStackTrace();
                     Log.e("Exception ",e.getMessage());
 
@@ -221,7 +219,17 @@ public class ProductsFragment extends Fragment implements SwipeRefreshLayout.OnR
        // GlobalBus.getBus().unregister(this);
     }
 
+  /*  @Override
+    public void onResume() {
+        super.onResume();
+        getProductList();
+    }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        getProductList();
+    }*/
 }
 
 

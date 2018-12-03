@@ -6,6 +6,16 @@ public class History {
     private String total;
     private String gst;
     private String value;
+    private String order_status;
+
+    public String getOrder_status() {
+        return order_status;
+    }
+
+    public void setOrder_status(String order_status) {
+        this.order_status = order_status;
+    }
+
 
     public String getValue() {
         return value;
@@ -15,12 +25,13 @@ public class History {
         this.value = value;
     }
 
-    public History(String datetime, String order_id, String total, String gst,String value) {
+    public History(String datetime, String order_id, String total, String gst,String value,String order_status) {
         this.datetime = datetime;
         this.order_id = order_id;
         this.total = total;
         this.gst = gst;
         this.value = value;
+        this.order_status=order_status;
     }
 
     public String getDatetime() {
